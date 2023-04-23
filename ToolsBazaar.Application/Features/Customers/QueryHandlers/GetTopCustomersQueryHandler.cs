@@ -44,16 +44,22 @@ namespace ToolsBazaar.Application.Features.Customers.QueryHandlers
                     o => o.Customer.Id,
                     (c, o) => new { Customer = c, Order = o })
                 .GroupBy(co => co.Order.Customer)
-                .Select(g => new
-                {
-                    Customer = g.Key,
-                    TotalSpent = g.Sum(co => co.Order.GrandTotal)
-                })
+                .Select(
+                    g => new
+                    {
+                        Customer = g.Key,
+                        TotalSpent = g.Sum(co => co.Order.GrandTotal)
+                    })
                 .OrderByDescending(c => c.TotalSpent)
                 .Take(5)
                 .ToList();
 
-            var result = topCustomers.Select(o => o.Customer);
+            var result = 
+                topCustomers
+                    .Select(o => o.Customer)
+                    .ToList()
+                ?? Enumerable.Empty<Customer>();
+
             return Task.FromResult(result);
         }
     }

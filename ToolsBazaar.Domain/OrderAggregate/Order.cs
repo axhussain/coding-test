@@ -8,5 +8,5 @@ public class Order
     public DateTime Date { get; init; }
     public List<OrderItem> Items { get; init; }
     public Customer Customer { get; init; }
-    public decimal GrandTotal => Items.Sum(i => i.Product.Price);
+    public decimal GrandTotal => Items.Sum(i => i.Price);
 }
