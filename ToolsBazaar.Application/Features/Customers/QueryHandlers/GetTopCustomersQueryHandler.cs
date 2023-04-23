@@ -47,7 +47,7 @@ namespace ToolsBazaar.Application.Features.Customers.QueryHandlers
                 .Select(g => new
                 {
                     Customer = g.Key,
-                    TotalSpent = g.Sum(co => co.Order.Items.Sum(oi => oi.Product.Price))
+                    TotalSpent = g.Sum(co => co.Order.GrandTotal)
                 })
                 .OrderByDescending(c => c.TotalSpent)
                 .Take(5)
