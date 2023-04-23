@@ -7,6 +7,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\ToolsBazaar.Application\ToolsBazaar.Application.csproj" />
 		<ProjectReference Include="..\ToolsBazaar.Domain\ToolsBazaar.Domain.csproj" />
 		<ProjectReference Include="..\ToolsBazaar.Persistence\ToolsBazaar.Persistence.csproj" />
 	</ItemGroup>
