@@ -19,7 +19,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpPut("{customerId:int}")]
-    public void UpdateCustomerName(int customerId, [FromRoute] CustomerDto dto)
+    public void UpdateCustomerName([FromRoute] int customerId, [FromBody] CustomerDto dto)
     {
         _logger.LogInformation($"Updating customer #{customerId} name...");
 
