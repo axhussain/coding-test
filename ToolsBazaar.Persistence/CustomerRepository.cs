@@ -8,7 +8,10 @@ public class CustomerRepository : ICustomerRepository
 
     public void UpdateCustomerName(int customerId, string name)
     {
-        var customer = DataSet.AllCustomers.FirstOrDefault(c => c.Id == customerId);
+        var customer = 
+            DataSet.AllCustomers.SingleOrDefault(c => c.Id == customerId) 
+            ?? throw new CustomerNotFoundException();
+
         customer.UpdateName(name);
     }
 }
