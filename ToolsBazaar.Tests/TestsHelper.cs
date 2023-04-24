@@ -19,7 +19,7 @@
         internal static string GetRandomEmail()
         {
             var rndString = GetRandomString(10);
-            var email = $"{rndString.Substring(0, 4)}@{rndString.Substring(0, 6)}.com";
+            var email = $"{rndString.Substring(0, 4)}@{rndString.Substring(4, 6)}.com";
             return email;
         }
     }

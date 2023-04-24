@@ -20,6 +20,30 @@ public class GetTopCustomerTests
     [Fact]
     public void QueryHandler_GivenNoMatchingOrderDate_ShouldReturnEmptySequence()
     {
+        (GetTopCustomersQuery query, GetTopCustomersQueryHandler sut) = Setup_QueryHandler_GivenNoMatchingOrderDate();
+
+        var returnedCustomers = sut.Handle(query, CancellationToken.None).Result.ToList();
+
+        returnedCustomers.Should().BeEmpty();
+    }    
+
+    [Theory, MemberData(nameof(DateRangeMarch2023))]
+    public void QueryHandler_GivenDateRange_ShouldOnlyReturnValidCustomersInDescendingOrderOfAmountSpent(DateTime from, DateTime to)
+    {
+        (GetTopCustomersQuery query, GetTopCustomersQueryHandler sut) = Setup_QueryHandler_GivenDateRange(from, to);
+
+        var returnedCustomers = sut.Handle(query, CancellationToken.None).Result.ToList();
+
+        returnedCustomers.First().Id.Should().Be(2);
+        returnedCustomers.First().Name.Should().Be("Customer Two");
+        returnedCustomers.Skip(1).First().Id.Should().Be(1);
+        returnedCustomers.Skip(1).First().Name.Should().Be("Customer One");
+    }
+
+
+
+    private static (GetTopCustomersQuery query, GetTopCustomersQueryHandler handler) Setup_QueryHandler_GivenNoMatchingOrderDate()
+    {
         var customers = new List<Customer>
         {
             new CustomerBuilder()
@@ -52,15 +76,13 @@ public class GetTopCustomerTests
 
         var logger = Substitute.For<ILogger<GetTopCustomersQueryHandler>>();
 
-        var sut = new GetTopCustomersQueryHandler(customerRepository, ordersRespository, logger);
         var query = new GetTopCustomersQuery(DateTime.Today, DateTime.Today);
+        var handler = new GetTopCustomersQueryHandler(customerRepository, ordersRespository, logger);
 
-        var returnedCustomers = sut.Handle(query, CancellationToken.None).Result.ToList();
-        returnedCustomers.Should().BeEmpty();
+        return (query, handler);
     }
 
-    [Theory, MemberData(nameof(DateRangeMarch2023))]
-    public void QueryHandler_GivenDateRange_ShouldOnlyReturnValidCustomersInDescendingOrderOfAmountSpent(DateTime from, DateTime to)
+    private static (GetTopCustomersQuery query, GetTopCustomersQueryHandler handler) Setup_QueryHandler_GivenDateRange(DateTime from, DateTime to)
     {
         var customers = new List<Customer>
         {
@@ -143,14 +165,9 @@ public class GetTopCustomerTests
 
         var logger = Substitute.For<ILogger<GetTopCustomersQueryHandler>>();
 
-        var sut = new GetTopCustomersQueryHandler(customerRepository, ordersRespository, logger);
         var query = new GetTopCustomersQuery(from, to);
+        var handler = new GetTopCustomersQueryHandler(customerRepository, ordersRespository, logger);
 
-        var returnedCustomers = sut.Handle(query, CancellationToken.None).Result.ToList();
-
-        returnedCustomers.First().Id.Should().Be(2);
-        returnedCustomers.First().Name.Should().Be("Customer Two");
-        returnedCustomers.Skip(1).First().Id.Should().Be(1);
-        returnedCustomers.Skip(1).First().Name.Should().Be("Customer One");
+        return (query, handler);
     }
 }
